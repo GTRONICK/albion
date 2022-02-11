@@ -1,20 +1,21 @@
 <div
   class="animate__animated animate__fadeIn animate__faster flex flex-column align-content-center"
 >
+  <!-- Filters -->
   <div [formGroup]="gobForm" class="mb-5 mt-2">
     <div class="grid">
       <div class="col-12 md:col-4">
         <div class="p-inputgroup">
           <span class="p-inputgroup-addon"><i class="pi pi-compass"></i></span>
-            <input
-              id="intemNameInput"
-              type="text"
-              pInputText
-              placeholder="Item Name ..."
-              formControlName="searchTerm"
-              #searchInput
-              autofocus
-            />
+          <input
+            id="intemNameInput"
+            type="text"
+            pInputText
+            placeholder="Item Name ..."
+            formControlName="searchTerm"
+            #searchInput
+            autofocus
+          />
           <span
             class="p-inputgroup-addon clear animate__animated animate__slideInLeft animate__faster"
             *ngIf="searchInput.value.length > 0"
@@ -66,6 +67,8 @@
       ></p-dropdown>
     </div>
   </div>
+
+  <!-- Table -->
   <ng-container *ngIf="marketPrices.length > 0; else loading">
     <div class="items-table">
       <p-table
@@ -75,7 +78,6 @@
         [rows]="5"
         [showCurrentPageReport]="true"
         [rowsPerPageOptions]="[5, 10, 20]"
-        class="w-100"
       >
         <ng-template pTemplate="header">
           <tr>
@@ -90,6 +92,12 @@
             </th>
             <th pSortableColumn="enchantments">
               Enchantments<p-sortIcon field="enchantments"></p-sortIcon>
+            </th>
+            <th class="text-right" pSortableColumn="buy_price_min">
+              Min. Buy price<p-sortIcon field="buy_price_min"></p-sortIcon>
+            </th>
+            <th class="text-right" pSortableColumn="buy_price_max">
+              Max. Buy price<p-sortIcon field="buy_price_max"></p-sortIcon>
             </th>
             <th class="text-right" pSortableColumn="sell_price_min">
               Min. Sell price<p-sortIcon field="sell_price_min"></p-sortIcon>
@@ -106,6 +114,12 @@
             <td>{{ item.qualityName }}</td>
             <td>{{ item.enchantments }}</td>
             <td class="text-right">
+              {{ item.buy_price_min | currency: "USD":"symbol":"1.0-0" }}
+            </td>
+            <td class="text-right">
+              {{ item.buy_price_max | currency: "USD":"symbol":"1.0-0" }}
+            </td>
+            <td class="text-right">
               {{ item.sell_price_min | currency: "USD":"symbol":"1.0-0" }}
             </td>
             <td class="text-right">
@@ -115,7 +129,10 @@
         </ng-template>
       </p-table>
     </div>
+    <!-- </div> -->
   </ng-container>
+
+  <!-- Loading spinner -->
   <ng-template #loading class="flex justify-content-center">
     <p-progressSpinner
       *ngIf="searchingStatus$ | async"

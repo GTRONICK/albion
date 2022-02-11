@@ -25,10 +25,6 @@ export const QUALITIES: GenericModel[] = [
   { name: 'Masterpiece', value: 5 },
 ];
 
-export const CITIES: string[] = [
-  
-];
-
 export const ENCHANTMENTS: GenericModel[] = [
   { name: 'All', value: 4 },
   { name: 'No enchanments', value: 0 },
