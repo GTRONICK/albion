@@ -5,7 +5,7 @@
             (click)="gbShowSidebar = !gbShowSidebar"
             pButton
             pRipple
-            icon="pi pi-bars"
+            [icon]="gbShowSidebar ? 'pi pi-times' : 'pi pi-bars'"
             class="mt-2 mb-2 ml-auto mr-2"
             pTooltip="Menu"
             tooltipPosition="bottom">
