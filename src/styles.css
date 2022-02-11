@@ -1,0 +1,32 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+}
+
+.gradient {
+	background: linear-gradient(45deg, #772d76, #3390a6);
+}
+
+.heading {
+    color: rgb(83, 75, 75);
+    padding: 0.5rem;
+}
+
+div.p-card.p-component {
+    height: 100%;
+}
+
+.header-title {
+    line-height: 3.5rem;
+    color: rgb(83, 75, 75);
+}
+
+canvas {
+    max-width: 100%; /* Avoids pushing content to the right on small screens */
+}
+
+.p-dropdown {
+    width: 100%;
+}

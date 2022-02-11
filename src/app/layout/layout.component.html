@@ -1,0 +1,21 @@
+<div class="menu">
+    <div class="menu-button">
+        <button
+            type="button"
+            (click)="gbShowSidebar = !gbShowSidebar"
+            pButton
+            pRipple
+            icon="pi pi-bars"
+            class="mt-2 mb-2 ml-auto mr-2"
+            pTooltip="Menu"
+            tooltipPosition="bottom">
+        </button>
+    </div>
+    <app-header class="header flex shadow-2"></app-header>
+</div>
+<div class="middle">
+    <app-sidebar class="shadow-1 sidebar animate__animated animate__fadeIn animate__faster"></app-sidebar>
+    <app-sidebar [ngClass]="{'hidden': !gbShowSidebar}" class="shadow-1 sidebar-by-button animate__animated animate__slideInLeft animate__faster"></app-sidebar>
+    <app-main class="main"></app-main>
+</div>
+<app-footer class="footer shadow-4"></app-footer>

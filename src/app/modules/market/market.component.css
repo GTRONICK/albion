@@ -1,0 +1,24 @@
+:host {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-content: center;
+}
+
+
+th {
+    min-width: 170px;
+}
+
+.items-table {
+	max-width: 92vw;
+	border: 1px solid #CECECE;
+	border-radius: 5px;
+}
+
+.clear {
+    background-color: transparent;
+    border-left: none;
+    transition: 3s;
+    cursor: pointer;
+}
