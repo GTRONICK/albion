@@ -27,20 +27,20 @@ export const QUALITIES: GenericModel[] = [
 
 export const ENCHANTMENTS: GenericModel[] = [
   { name: 'All', value: 4 },
-  { name: 'No enchanments', value: 0 },
-  { name: 'One enchanment', value: 1 },
-  { name: 'Two enchanments', value:  2 },
-  { name: 'Three enchanments', value: 3 }
+  { name: '0 enchanments', value: 0 },
+  { name: '1 enchanment', value: 1 },
+  { name: '2 enchanments', value:  2 },
+  { name: '3 enchanments', value: 3 }
 ];
 
 export const TIERS: GenericModel[] = [
   { name: 'All', value: 0 },
-  { name: 'Beginner', value: 1 },
-  { name: 'Novice', value: 2 },
-  { name: 'Journeyman', value: 3 },
-  { name: 'Adept', value: 4 },
-  { name: 'Expert', value: 5 },
-  { name: 'Master', value: 6 },
-  { name: 'Grand Master', value: 7 },
-  { name: 'Elder', value: 8 }
+  { name: '(1) Beginner', value: 1 },
+  { name: '(2) Novice', value: 2 },
+  { name: '(3) Journeyman', value: 3 },
+  { name: '(4) Adept', value: 4 },
+  { name: '(5) Expert', value: 5 },
+  { name: '(6) Master', value: 6 },
+  { name: '(7) Grand Master', value: 7 },
+  { name: '(8) Elder', value: 8 }
 ];

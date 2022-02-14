@@ -2,9 +2,9 @@
   class="animate__animated animate__fadeIn animate__faster flex flex-column align-content-center"
 >
   <!-- Filters -->
-  <div [formGroup]="gobForm" class="mb-5 mt-2">
+  <div [formGroup]="gobForm" class="mt-2">
     <div class="grid">
-      <div class="col-12 md:col-4">
+      <div class="field col-12 md:col-4">
         <div class="p-inputgroup">
           <span class="p-inputgroup-addon"><i class="pi pi-compass"></i></span>
           <input
@@ -27,53 +27,90 @@
             pButton
             pRipple
             (click)="getItemPrice(searchInput.value)"
+            [loading]="gbIsLoading"
             [disabled]="
-              searchInput.value.length === 0 || (searchingStatus$ | async)
+              searchInput.value.length === 0 || (gobSearchingStatus$ | async)
             "
           >
             <i class="pi pi-search"></i>
           </button>
         </div>
       </div>
-      <p-dropdown
-        class="col-12 md:col-2"
-        [options]="tiers"
-        formControlName="tier"
-        optionLabel="name"
-        optionValue="value"
-        placeholder="Tier"
-      ></p-dropdown>
-      <p-dropdown
-        class="col-12 md:col-2"
-        [options]="enchantments"
-        formControlName="enchantments"
-        optionLabel="name"
-        optionValue="value"
-        placeholder="Enchantments"
-      ></p-dropdown>
-      <p-dropdown
-        class="col-12 md:col-2"
-        [options]="qualities"
-        formControlName="quality"
-        optionLabel="name"
-        optionValue="value"
-        placeholder="Quality"
-      ></p-dropdown>
-      <p-dropdown
-        class="col-12 md:col-2"
-        [options]="locations"
-        formControlName="city"
-        placeholder="City"
-      ></p-dropdown>
+
+      <div class="field col-12 md:col-2">
+        <span class="p-float-label">
+          <p-dropdown
+            inputId="tiers"
+            [options]="gobTiers"
+            formControlName="tier"
+            optionLabel="name"
+            optionValue="value"
+            [autoDisplayFirst]="false"
+          ></p-dropdown>
+          <label for="tiers">Tier</label>
+        </span>
+      </div>
+
+      <div class="field  col-12 md:col-2">
+        <span class="p-float-label">
+          <p-dropdown
+            inputId="enchantments"
+            [options]="gobEnchantments"
+            formControlName="enchantments"
+            optionLabel="name"
+            optionValue="value"
+            [autoDisplayFirst]="false"
+          ></p-dropdown>
+          <label for="enchantments">Enchantments</label>
+        </span>
+      </div>
+
+      <div class="field  col-12 md:col-2">
+        <span class="p-float-label">
+          <p-dropdown
+            inputId="qualities"
+            [options]="gobQualities"
+            formControlName="quality"
+            optionLabel="name"
+            optionValue="value"
+            [autoDisplayFirst]="false"
+          ></p-dropdown>
+          <label for="qualities">Quality</label>
+        </span>
+      </div>
+
+      <div class="field  col-12 md:col-2">
+        <span class="p-float-label">
+          <p-dropdown
+            inputId="locations"
+            [options]="gobLocations"
+            formControlName="city"
+            [autoDisplayFirst]="false"
+          ></p-dropdown>
+          <label for="locations">City</label>
+        </span>
+      </div>
     </div>
   </div>
 
+  <div class="flex justify-content-center" *ngIf="searchInput.value != ''">
+    <button
+      pButton
+      pRipple
+      [pTooltip]="'Reset all filters'"
+      type="button"
+      icon="pi pi-refresh"
+      class="p-button-outlined p-button-rounded animate__animated animate__rotateIn"
+      (click)="resetFilters()"
+    ></button>
+  </div>
+
   <!-- Table -->
-  <ng-container *ngIf="marketPrices.length > 0; else loading">
-    <div class="items-table">
+  <ng-container *ngIf="gobMarketPrices.length > 0; else loading">
+    <div class="items-table mt-2">
       <p-table
         responsiveLayout="scroll"
-        [value]="marketPrices"
+        [value]="gobMarketPrices"
         [paginator]="true"
         [rows]="5"
         [showCurrentPageReport]="true"
@@ -135,7 +172,7 @@
   <!-- Loading spinner -->
   <ng-template #loading class="flex justify-content-center">
     <p-progressSpinner
-      *ngIf="searchingStatus$ | async"
+      *ngIf="gobSearchingStatus$ | async"
       class="flex"
     ></p-progressSpinner>
   </ng-template>

@@ -14,27 +14,29 @@ import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 })
 export class MarketComponent implements OnInit, OnDestroy {
 
-  locations: string[] = LOCATIONS;
-  qualities: GenericModel[] = QUALITIES;
-  tiers: GenericModel[] = TIERS;
-  enchantments: GenericModel[] = ENCHANTMENTS;
+  gobLocations: string[] = LOCATIONS;
+  gobQualities: GenericModel[] = QUALITIES;
+  gobTiers: GenericModel[] = TIERS;
+  gobEnchantments: GenericModel[] = ENCHANTMENTS;
   
-  marketPrices: MarketResponse[] = [];
-  searchTerms: string[] = [];
+  gobSearchTerms: string[] = [];
   gobForm: FormGroup = new FormGroup({});
-  searching$ = new BehaviorSubject<boolean>(false);
-  searchingStatus$ = this.searching$.asObservable();
-  controlValueChangeSubs: Subscription[] = [];
-
-  choosenQuality: number = 0;
-  choosenEnchanments: number = 4;
-  choosenTier: number = 0;
-  chosenCities: string[] = ['All'];
+  gobSearching$ = new BehaviorSubject<boolean>(false);
+  gobSearchingStatus$ = this.gobSearching$.asObservable();
+  gobControlValueChangeSubs: Subscription[] = [];
+  
+  giChosenQuality: number = 0;
+  giChosenEnchanments: number = 4;
+  giChosenTier: number = 0;
+  gobChosenCities: string[] = ['All'];
+  gbIsLoading: boolean = false;
+  
+  gobMarketPrices: MarketResponse[] = [];
 
   constructor(
-    private albionService: AlbionService,
-    private fb: FormBuilder,
-    private messageService: MessageService
+    private gobAlbionService: AlbionService,
+    private gobFormBuilder: FormBuilder,
+    private gobMessageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -44,11 +46,11 @@ export class MarketComponent implements OnInit, OnDestroy {
   }
 
   showToast(severity: string, title: string, message: string) {
-    this.messageService.add({severity:severity, summary:title, detail:message});
+    this.gobMessageService.add({severity:severity, summary:title, detail:message});
   }
 
   initForm(): void {
-    this.gobForm = this.fb.group({
+    this.gobForm = this.gobFormBuilder.group({
       searchTerm: ['', Validators.required],
       quality: [],
       enchantments: [],
@@ -58,54 +60,53 @@ export class MarketComponent implements OnInit, OnDestroy {
   }
 
   initSubscriptions(): void {
-    this.controlValueChangeSubs.push(this.gobForm.controls.quality.valueChanges.subscribe( value => {
-      this.choosenQuality = value;
+    this.gobControlValueChangeSubs.push(this.gobForm.controls.quality.valueChanges.subscribe( value => {
+      this.giChosenQuality = value;
       this.getItemPrice(this.gobForm.controls.searchTerm.value);
     }));
 
-    this.controlValueChangeSubs.push(this.gobForm.controls.enchantments.valueChanges.subscribe( value => {
-        this.choosenEnchanments = value;
+    this.gobControlValueChangeSubs.push(this.gobForm.controls.enchantments.valueChanges.subscribe( value => {
+        this.giChosenEnchanments = value;
         this.getItemPrice(this.gobForm.controls.searchTerm.value);
     }));
 
-    this.controlValueChangeSubs.push(this.gobForm.controls.tier.valueChanges.subscribe( value => {
-        this.choosenTier = value;
+    this.gobControlValueChangeSubs.push(this.gobForm.controls.tier.valueChanges.subscribe( value => {
+        this.giChosenTier = value;
         this.getItemPrice(this.gobForm.controls.searchTerm.value);
     }));
 
-    this.controlValueChangeSubs.push(this.gobForm.controls.city.valueChanges.subscribe( value => {
-        this.chosenCities = [...[]];
-        this.chosenCities.push(value);
+    this.gobControlValueChangeSubs.push(this.gobForm.controls.city.valueChanges.subscribe( value => {
+        this.gobChosenCities = [...[]];
+        this.gobChosenCities.push(value);
         this.getItemPrice(this.gobForm.controls.searchTerm.value);
     }));
   }
 
   disableSubscriptions(): void {
-    this.controlValueChangeSubs.forEach( subs => {
+    this.gobControlValueChangeSubs.forEach( subs => {
       subs.unsubscribe;
     });
 
-    this.controlValueChangeSubs = [...[]];
+    this.gobControlValueChangeSubs = [...[]];
   }
 
   getItemPrice(itemName: string): void {
 
-    
-    let itemUidList = [];
+    let lobItemUidList = [];
     
     if ( itemName && itemName.length > 0 ) {
-      this.marketPrices.splice(0, this.marketPrices.length);
-      this.searching$.next(true);
+      this.gbIsLoading = true;
+      this.gobMarketPrices.splice(0, this.gobMarketPrices.length);
+      this.gobSearching$.next(true);
       this.disableFields();
 
-      itemUidList = this.albionService.getItemUniqueName(itemName);
-      itemUidList = this.filterByEnchanments(itemUidList);
-      itemUidList = this.filterByTier(itemUidList);
-      console.log(itemUidList);
+      lobItemUidList = this.gobAlbionService.getItemUniqueName(itemName);
+      lobItemUidList = this.filterByEnchanments(lobItemUidList);
+      lobItemUidList = this.filterByTier(lobItemUidList);
       
 
-      if ( itemUidList.length > 0 ) {
-        this.albionService.getItemPrice(this.chosenCities, itemUidList, this.choosenQuality)
+      if ( lobItemUidList.length > 0 ) {
+        this.gobAlbionService.getItemPrice(this.gobChosenCities, lobItemUidList, this.giChosenQuality)
         .pipe(
           map( data => {
             data.forEach(element => {
@@ -115,8 +116,9 @@ export class MarketComponent implements OnInit, OnDestroy {
             return data.filter( item => item.sell_price_max > 0);
           })
         ).subscribe( elements => {
-          this.marketPrices = [...elements];
-          this.searching$.next(false);
+          this.gobMarketPrices = [...elements];
+          this.gobSearching$.next(false);
+          this.gbIsLoading = false;
           this.enableFields();
         }, error => {
           console.error(error);
@@ -125,11 +127,15 @@ export class MarketComponent implements OnInit, OnDestroy {
       } else {
         this.showToast('warn', 'Ops!','No items found');
         this.enableFields();
-        this.searching$.next(false);
+        this.gobSearching$.next(false);
+        this.gbIsLoading = false;
       }
     }
   }
 
+  /**
+   * Disable the search form fields
+   */
   disableFields(): void {
     this.gobForm.controls.quality.disable({emitEvent: false});
     this.gobForm.controls.enchantments.disable({emitEvent: false});
@@ -137,6 +143,9 @@ export class MarketComponent implements OnInit, OnDestroy {
     this.gobForm.controls.city.disable({emitEvent: false});
   }
 
+  /**
+   * Enable the search form fields
+   */
   enableFields(): void {
     this.gobForm.controls.quality.enable({emitEvent: false});
     this.gobForm.controls.enchantments.enable({emitEvent: false});
@@ -150,7 +159,7 @@ export class MarketComponent implements OnInit, OnDestroy {
    * @returns string
    */
   filterByName(uniqueName: string): string {
-    return this.albionService.getItemLocalizedName(uniqueName);
+    return this.gobAlbionService.getItemLocalizedName(uniqueName);
   }
 
   /**
@@ -160,23 +169,29 @@ export class MarketComponent implements OnInit, OnDestroy {
    * @returns string[]
    */
   filterByEnchanments(itemUIds: string[]): string[] {
-    if ( this.choosenEnchanments < 4 ) {
+    if ( this.giChosenEnchanments < 4 ) {
 
-      if ( this.choosenEnchanments === 0 ) {
+      if ( this.giChosenEnchanments === 0 ) {
         return itemUIds.filter( item => {
           return !item.includes('@');
         });
       }
 
       return itemUIds.filter( item => {
-        return this.getEnchantmentCount(item) === this.choosenEnchanments;
+        return this.getEnchantmentCount(item) === this.giChosenEnchanments;
       });
     } else return itemUIds;
   }
 
+  /**
+   * Extracts the items which have the chosen tier
+   * from the given items array.
+   * @param itemUIds 
+   * @returns string[]
+   */
   filterByTier(itemUIds: string[]): string[] {
-    if ( this.choosenTier > 0 ) {
-      let currentTier = `T${this.choosenTier}`;
+    if ( this.giChosenTier > 0 ) {
+      let currentTier = `T${this.giChosenTier}`;
 
       return itemUIds.filter( item => {
         return item.split(`_`)[0] && item.split(`_`)[0] === currentTier;
@@ -184,13 +199,36 @@ export class MarketComponent implements OnInit, OnDestroy {
     } else return itemUIds;
   }
 
+  /**
+   * Gets the localized name for the specified quality number
+   * @param quality Quality value number
+   * @returns The localized name for the given quality
+   */
   getQualityName(quality: number | string): string {
     let lobArray = QUALITIES.filter( (item) => item.value === quality );
     return lobArray.length > 0 ? lobArray[0].name : '';
   }
 
+  /**
+   * Extract the item's enchantment count from its UID
+   * @param itemUid Item's unique identifier
+   * @returns number
+   */
   getEnchantmentCount(itemUid: string): number {
     return itemUid.split('@')[1] ? Number(itemUid.split('@')[1]) : 0;
+  }
+
+  /**
+   * Clear the filters
+   */
+  resetFilters(): void {
+    this.gobForm.reset({emitEvent: false});
+    this.giChosenQuality = 0;
+    this.giChosenEnchanments = 4;
+    this.giChosenTier = 0;
+    this.gobChosenCities = ['All'];
+    this.gbIsLoading = false;
+    this.gobMarketPrices = [];
   }
 
   ngOnDestroy(): void {
