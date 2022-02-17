@@ -1,9 +1,12 @@
+import { LOCATIONS } from './../models/generic.model';
 import { ItemModel } from './../models/itemModel';
 import { MarketResponse } from './../models/marketResponse.model';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ItemDataSource } from './ItemDB';
+import { map } from 'rxjs/operators';
+import { BestPlaceModel } from '../models/bestPlace.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +17,30 @@ export class AlbionService {
 
   getItemPrice(locations: string[], itemUids: string[], qualities?: number): Observable<MarketResponse[]> {
     return this.http.get<MarketResponse[]>(`https://www.albion-online-data.com/api/v2/stats/prices/${itemUids}?locations=${locations}&qualities=${qualities}`);
+  }
+
+  getBestToSellBuy(itemUid: string, quality: number): Observable<BestPlaceModel> {
+    return this.getItemPrice(LOCATIONS, [itemUid], quality)
+    .pipe(
+      map( data => {
+        let items =  data.filter( item => item.sell_price_max > 0);
+        let bestPlaceToSell = items.sort( (a: MarketResponse, b: MarketResponse) => {
+          return a.sell_price_max > b.sell_price_max ? 0 : 1;
+        })[0];
+        let bestPlaceToBuy = items.sort( (a: MarketResponse, b: MarketResponse) => {
+          return a.sell_price_max < b.sell_price_max ? 0 : 1;
+        })[0];
+
+        let lobBestPlace: BestPlaceModel = {
+          sellCity: bestPlaceToSell.city,
+          sellPrice: bestPlaceToSell.sell_price_max,
+          buyCity: bestPlaceToBuy.city,
+          buyPrice: bestPlaceToBuy.sell_price_max
+        };
+
+        return lobBestPlace;
+      })
+    )
   }
 
   getItemUniqueName(searchTerm: string): string[] {

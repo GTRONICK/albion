@@ -1,0 +1,61 @@
+<div
+  *ngIf="!gbIsLoading; else loading"
+  class="flex justify-content-evenly flex-wrap align-content-evenly m-auto animate__animated animate__fadeIn animate__faster"
+>
+  <p-card class="p-3">
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <span class="text-center font-bold w-full inline-block"
+          >Best place to sell</span
+        >
+      </div>
+    </ng-template>
+    <div class="grid">
+      <div class="col flag">
+        <img
+          class="flag-img"
+          [src]="getFlagImg(gsBestToSell)"
+          alt="Faction flag"
+        />
+      </div>
+      <div class="col text-center m-auto">{{ gsBestToSell }}</div>
+    </div>
+    <ng-template pTemplate="footer">
+      <div class="card-footer">
+        <span class="footer-price">{{giSellPrice | currency: "USD":"symbol":"1.0-0"}}</span>
+      </div>
+    </ng-template>
+  </p-card>
+
+  <p-card class="p-3">
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <span class="text-center font-bold w-full inline-block"
+          >Best place to buy</span
+        >
+      </div>
+    </ng-template>
+    <div class="grid">
+      <div class="col flag">
+        <img
+          class="flag-img"
+        [src]="getFlagImg(gsBestToBuy)"
+          alt="Faction flag"
+        />
+      </div>
+      <div class="col text-center m-auto">{{ gsBestToBuy }}</div>
+    </div>
+    <ng-template pTemplate="footer">
+      <div class="card-footer">
+        <span class="footer-price">{{giBuyPrice | currency: "USD":"symbol":"1.0-0"}}</span>
+      </div>
+    </ng-template>
+  </p-card>
+</div>
+
+<!-- Loading spinner -->
+<ng-template #loading class="flex justify-content-center">
+  <p-progressSpinner
+    class="flex"
+  ></p-progressSpinner>
+</ng-template>

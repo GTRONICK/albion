@@ -18,6 +18,9 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
+import { CardModule } from 'primeng/card';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,10 @@ import {ProgressSpinnerModule} from 'primeng/progressspinner';
     ReactiveFormsModule,
     DropdownModule,
     InputTextModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    CardModule,
+    DynamicDialogModule,
+    InputSwitchModule
   ],
   exports: [
     HeaderComponent,
@@ -57,7 +63,10 @@ import {ProgressSpinnerModule} from 'primeng/progressspinner';
     ReactiveFormsModule,
     DropdownModule,
     InputTextModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    CardModule,
+    DynamicDialogModule,
+    InputSwitchModule
   ],
   providers: [
     MessageService,

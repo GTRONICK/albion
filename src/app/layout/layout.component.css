@@ -30,6 +30,8 @@
     flex-direction: column;
     justify-content: flex-start;
     padding: 1.2rem;
+    align-items: center;
+    max-width: 10rem;
 }
 
 .sidebar-by-button {
@@ -48,7 +50,8 @@
 }
 
 .main {
-    display: flex;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .footer {
@@ -63,10 +66,18 @@
     .menu-button {
         display: block;
     }
+
+    .main {
+        width: 100%;
+    }
 }
 
 @media screen and (min-width: 800px) {
     .sidebar-by-button {
         display: none;
+    }
+
+    .main {
+        width: 90%;
     }
 }

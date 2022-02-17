@@ -1,0 +1,25 @@
+:host {
+    width: 100%;
+}
+
+.card-header {
+    padding: 1rem;
+    border-bottom: 1px solid #CECECE;
+    background-color: #EBEBEB;
+}
+
+.footer-price {
+    text-align: center;
+    font-weight: bolder;
+    display: inline-block;
+    width: 100%;
+}
+
+.card-footer {
+	padding: 1rem 0 0 0;
+    border-top: 1px solid #CECECE;
+}
+
+.flag-img {
+    max-width: 80px;
+}

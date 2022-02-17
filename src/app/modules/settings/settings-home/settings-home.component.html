@@ -1,0 +1,18 @@
+<div
+  class="w-full flex flex-column animate__animated animate__fadeIn animate__faster flex flex-column align-content-center"
+>
+  <div class="flex justify-content-between">
+    <span class="mr-2">Use only real continent cities</span
+    ><p-inputSwitch
+      (onChange)="onlyReal($event)"
+      [(ngModel)]="gbOnlyReal"
+    ></p-inputSwitch>
+  </div>
+  <div class="flex justify-content-between">
+    <span class="mr-2">Exclude Caerleon from the city list</span
+    ><p-inputSwitch
+      (onChange)="exclude($event)"
+      [(ngModel)]="gbExclude"
+    ></p-inputSwitch>
+  </div>
+</div>

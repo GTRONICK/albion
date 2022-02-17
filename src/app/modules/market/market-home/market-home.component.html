@@ -51,7 +51,7 @@
         </span>
       </div>
 
-      <div class="field  col-12 md:col-2">
+      <div class="field col-12 md:col-2">
         <span class="p-float-label">
           <p-dropdown
             inputId="enchantments"
@@ -65,7 +65,7 @@
         </span>
       </div>
 
-      <div class="field  col-12 md:col-2">
+      <div class="field col-12 md:col-2">
         <span class="p-float-label">
           <p-dropdown
             inputId="qualities"
@@ -79,7 +79,7 @@
         </span>
       </div>
 
-      <div class="field  col-12 md:col-2">
+      <div class="field col-12 md:col-2">
         <span class="p-float-label">
           <p-dropdown
             inputId="locations"
@@ -97,11 +97,11 @@
     <button
       pButton
       pRipple
-      [pTooltip]="'Reset all filters'"
       type="button"
       icon="pi pi-refresh"
-      class="p-button-outlined p-button-rounded animate__animated animate__rotateIn"
+      class="p-button-outlined p-button-rounded animate__animated animate__fadeIn"
       (click)="resetFilters()"
+      label="Reset search"
     ></button>
   </div>
 
@@ -146,7 +146,22 @@
         </ng-template>
         <ng-template pTemplate="body" let-item let-columns="columns">
           <tr>
-            <td>{{ filterByName(item.item_id) }}</td>
+            <td>
+              <p-button
+                type="button"
+                (onClick)="
+                  openBestMarket(
+                    item.item_id,
+                    item.tier,
+                    item.enchantments,
+                    item.quality,
+                    item.qualityName
+                  )
+                "
+                label="{{ filterByName(item.item_id) }}"
+                styleClass="p-button-link"
+              ></p-button>
+            </td>
             <td>{{ item.city }}</td>
             <td>{{ item.qualityName }}</td>
             <td>{{ item.enchantments }}</td>

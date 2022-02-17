@@ -21,3 +21,7 @@ th {
     transition: 3s;
     cursor: pointer;
 }
+
+tr:hover {
+    background-color: #CECECE;
+}
