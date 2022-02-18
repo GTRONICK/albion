@@ -4,16 +4,17 @@ export interface GenericModel {
 }
 
 export const LOCATIONS = [
-  'All',
-  'Arthurs Rest',
-  'Black Market',
-  'Bridgewatch',
-  'Caerleon',
-  'Fortsterling',
-  'Lymhurst',
-  'Martlock',
-  'Morganas Rest',
-  'Thetford',
+  {realm:'R', name: 'All'},
+  {realm:'O', name: 'Arthurs Rest'},
+  {realm:'C', name: 'Black Market'},
+  {realm:'R', name: 'Bridgewatch'},
+  {realm:'C', name: 'Caerleon'},
+  {realm:'R', name: 'Fortsterling'},
+  {realm:'R', name: 'Lymhurst'},
+  {realm:'R', name: 'Martlock'},
+  {realm:'O', name: 'Merlyns Rest'},
+  {realm:'O', name: 'Morganas Rest'},
+  {realm:'R', name: 'Thetford'},
 ]
 
 export const QUALITIES: GenericModel[] = [

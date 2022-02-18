@@ -22,7 +22,7 @@ import { BehaviorSubject, Subject, Subscription } from 'rxjs';
   providers: [DialogService],
 })
 export class MarketHomeComponent implements OnInit, OnDestroy {
-  gobLocations: string[] = LOCATIONS;
+  gobLocations: {realm: string, name: string}[] = LOCATIONS;
   gobQualities: GenericModel[] = QUALITIES;
   gobTiers: GenericModel[] = TIERS;
   gobEnchantments: GenericModel[] = ENCHANTMENTS;
@@ -36,7 +36,7 @@ export class MarketHomeComponent implements OnInit, OnDestroy {
   giChosenQuality: number = 0;
   giChosenEnchanments: number = 4;
   giChosenTier: number = 0;
-  gobChosenCities: string[] = ['All'];
+  gobChosenCities: string[] = this.gobLocations.map( city => city.name );
   gbIsLoading: boolean = false;
 
   gobMarketPrices: MarketResponse[] = [];
@@ -97,7 +97,13 @@ export class MarketHomeComponent implements OnInit, OnDestroy {
     this.gobControlValueChangeSubs.push(
       this.gobForm.controls.city.valueChanges.subscribe((value) => {
         this.gobChosenCities = [...[]];
-        this.gobChosenCities.push(value);
+        if ( value === 'All' ) {
+          this.gobLocations.map( item => item.name ).forEach( city => {
+            this.gobChosenCities.push(city);
+          });
+        } else {
+          this.gobChosenCities.push(value);
+        }
         this.getItemPrice(this.gobForm.controls.searchTerm.value);
       })
     );
@@ -105,30 +111,14 @@ export class MarketHomeComponent implements OnInit, OnDestroy {
 
   initLocations(): void {
     if (sessionStorage.getItem('onlyReal') === 'true') {
-      this.gobLocations = this.gobLocations.filter(
-        (city) => !city.toLowerCase().includes('rest')
-      );
-    } else {
-      if (
-        !this.gobLocations.includes('Arthurs Rest') &&
-        !this.gobLocations.includes('Morganas Rest')
-      ) {
-        this.gobLocations.push('Arthurs Rest', 'Morganas Rest');
-      }
+      this.gobLocations = this.gobLocations.filter( item => item.realm === 'R' || item.realm === 'C');
     }
 
     if (sessionStorage.getItem('exclude') === 'true') {
-      this.gobLocations = this.gobLocations
-        .filter((city) => !city.toLowerCase().includes('caerleon'))
-        .filter((city) => !city.toLowerCase().includes('black'));
-    } else {
-      if (
-        !this.gobLocations.includes('Caerleon') &&
-        !this.gobLocations.includes('Black Market')
-      ) {
-        this.gobLocations.push('Caerleon', 'Black Market');
-      }
+      this.gobLocations = this.gobLocations.filter( item => item.realm !== 'C' );
     }
+
+    this.gobChosenCities = this.gobLocations.map( city => city.name );
   }
 
   disableSubscriptions(): void {
@@ -139,6 +129,10 @@ export class MarketHomeComponent implements OnInit, OnDestroy {
     this.gobControlValueChangeSubs = [...[]];
   }
 
+  /**
+   * Gets the item prices for all the matching items
+   * @param itemName Search term to look for in the database
+   */
   getItemPrice(itemName: string): void {
     let lobItemUidList = [];
 
@@ -281,6 +275,11 @@ export class MarketHomeComponent implements OnInit, OnDestroy {
     return itemUid.split('@')[1] ? Number(itemUid.split('@')[1]) : 0;
   }
 
+  /**
+   * Extract the item's tier number from its UID
+   * @param itemUid Item's unique identifier
+   * @returns number
+   */
   getTierNumber(itemUid: string): number {
     return itemUid.split(`_`)[0][1] ? Number(itemUid.split(`_`)[0][1]) : 0;
   }
@@ -293,7 +292,7 @@ export class MarketHomeComponent implements OnInit, OnDestroy {
     this.giChosenQuality = 0;
     this.giChosenEnchanments = 4;
     this.giChosenTier = 0;
-    this.gobChosenCities = ['All'];
+    this.gobChosenCities = this.gobLocations.map( city => city.name );
     this.gbIsLoading = false;
     this.gobMarketPrices = [];
   }
@@ -316,6 +315,7 @@ export class MarketHomeComponent implements OnInit, OnDestroy {
         tier,
         enchantments,
         qualityNumber,
+        chosenCities: this.gobChosenCities
       },
       header: `${this.gobAlbionService.getItemLocalizedName(
         itemUid

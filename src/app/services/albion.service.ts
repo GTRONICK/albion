@@ -19,8 +19,13 @@ export class AlbionService {
     return this.http.get<MarketResponse[]>(`https://www.albion-online-data.com/api/v2/stats/prices/${itemUids}?locations=${locations}&qualities=${qualities}`);
   }
 
-  getBestToSellBuy(itemUid: string, quality: number): Observable<BestPlaceModel> {
-    return this.getItemPrice(LOCATIONS, [itemUid], quality)
+  getBestToSellBuy(itemUid: string, quality: number, locations?: string[]): Observable<BestPlaceModel> {
+
+    let lobLocations = new Array<string>();
+
+    lobLocations = locations ?? LOCATIONS.map( city => city.name);
+    
+    return this.getItemPrice(lobLocations, [itemUid], quality)
     .pipe(
       map( data => {
         let items =  data.filter( item => item.sell_price_max > 0);

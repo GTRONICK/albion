@@ -20,6 +20,7 @@ export class BestPlaceComponent implements OnInit {
   giSellPrice: number = 0;
   gsBestToBuy: string = '';
   giBuyPrice: number = 0;
+  gobLocations: string[] = [];
 
   constructor(
     private gobAlbionService: AlbionService,
@@ -31,13 +32,14 @@ export class BestPlaceComponent implements OnInit {
   ngOnInit(): void {
     this.giQuality = this.config.data.qualityNumber;
     this.gsItemUid = this.config.data.itemUid;
+    this.gobLocations = this.config.data.chosenCities;
     this.getBestPlaces();
   }
 
   getBestPlaces(): void {
 
     this.gbIsLoading = true;
-    this.gobAlbionService.getBestToSellBuy(this.gsItemUid, this.giQuality)
+    this.gobAlbionService.getBestToSellBuy(this.gsItemUid, this.giQuality, this.gobLocations)
     .subscribe( result => {
 
       this.gbIsLoading = false;
