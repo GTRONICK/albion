@@ -23,18 +23,22 @@ export class AlbionService {
 
     let lobLocations = new Array<string>();
 
-    lobLocations = locations ?? LOCATIONS.map( city => city.name);
+    lobLocations = locations ? locations : LOCATIONS.map( city => city.name);
     
     return this.getItemPrice(lobLocations, [itemUid], quality)
     .pipe(
       map( data => {
         let items =  data.filter( item => item.sell_price_max > 0);
-        let bestPlaceToSell = items.sort( (a: MarketResponse, b: MarketResponse) => {
-          return a.sell_price_max > b.sell_price_max ? 0 : 1;
+        let bestPlaceToSellArray = [...items];
+        let bestPlaceToSell = bestPlaceToSellArray.sort( (a: MarketResponse, b: MarketResponse) => {
+          return a.sell_price_max > b.sell_price_max ? -1 : 1;
         })[0];
-        let bestPlaceToBuy = items.sort( (a: MarketResponse, b: MarketResponse) => {
-          return a.sell_price_max < b.sell_price_max ? 0 : 1;
+
+        let bestPlaceToBuyArray = [...items];
+        let bestPlaceToBuy = bestPlaceToBuyArray.sort( (a: MarketResponse, b: MarketResponse) => {
+          return a.sell_price_max < b.sell_price_max ? -1 : 1;
         })[0];
+
 
         let lobBestPlace: BestPlaceModel = {
           sellCity: bestPlaceToSell.city,
